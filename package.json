@@ -1,0 +1,11 @@
+{
+  "name": "nodejs-starter",
+  "version": "1.0.0",
+  "description": "Getting Started with Nodejs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Xplode Tech",
+  "license": "MIT"
+}
