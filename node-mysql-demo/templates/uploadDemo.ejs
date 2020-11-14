@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nodejs/Express File Upload Using Multer</title>
+</head>
+<body>
+    <form action="/users/upload" method="POST" enctype="multipart/form-data">
+        <label for="photo">Select Photo</label>
+        <input type="file" name="photos" id="photo" multiple>
+
+        <input type="submit" value="Upload File">
+    </form>
+</body>
+</html>
