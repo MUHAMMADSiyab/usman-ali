@@ -2,22 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const multer = require("multer");
-
-// DiskStorage config
-const storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    return callback(null, "./uploads");
-  },
-
-  filename: function (req, file, callback) {
-    const extension = file.mimetype.split("/")[1] // image/png
-    return callback(null, `${file.fieldname}__${Date.now()}.${extension}`);
-  },
-});
-// Upload Config
-const upload = multer({
-  storage,
-});
+const path = require("path");
 
 /**
  * @GET
@@ -58,12 +43,54 @@ router.get("/upload-demo", (req, res) => {
   res.render("uploadDemo");
 });
 
+// DiskStorage config
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    return cb(null, "./uploads");
+  },
+
+  filename: function (req, file, cb) {
+    const extension = file.mimetype.split("/")[1]; // image/png
+    return cb(null, `${file.fieldname}__${Date.now()}.${extension}`);
+  },
+});
+
+// Upload Config
+const upload = multer({
+  storage,
+
+  limits: { fileSize: 2048000 },
+
+  fileFilter: function (req, file, cb) {
+    const fileExt = path.extname(file.originalname);
+    // Check the type of file
+    if (
+      fileExt !== ".jpg" &&
+      fileExt !== ".jpeg" &&
+      fileExt !== ".png" &&
+      fileExt !== ".gif"
+    ) {
+      return cb(new Error("Only image files are allowed!"), false);
+    }
+  
+    cb(null, true);
+  },
+}).single("photo");
+
 /**
  * @POST
  * Upload a photo
  */
-router.post("/upload", upload.array("photos"), (req, res) => {
-  res.send("Photo uploaded");
+router.post("/upload", (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      return res.json({
+        error: "File type is invalid or size exceeds the limit",
+      });
+    } else {
+      res.send("Photo uploaded successfully")
+    }
+  });
 });
 
 module.exports = router;
