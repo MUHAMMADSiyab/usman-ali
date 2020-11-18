@@ -4,8 +4,12 @@ const path = require('path');
 
 const port = 3000;
 
+app.use(express.json({ extended: false }))
+app.use(express.urlencoded({ extended: false }))
+
 // Setting routes
 app.use("/users", require("./routes/users"));
+app.use("/email", require("./routes/mails"));
 
 // Setting view engine
 app.set("view engine", "ejs");
